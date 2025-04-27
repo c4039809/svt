@@ -37,17 +37,46 @@
         const analytics = getAnalytics(app);
         const database = getDatabase();
 
-        // Load download counts once at page load
+        // Load download counts in real-time
         const booksIds = ['svt-arabe', 'svt-biof', 'pc-arabe', 'pc-biof'];
         booksIds.forEach(bookId => {
             const downloadsRef = ref(database, `downloads/${bookId}`);
-            get(downloadsRef).then((snapshot) => {
+            // Use onValue to listen for changes in real-time
+            onValue(downloadsRef, (snapshot) => {
                 const count = snapshot.val() || 0;
-                document.getElementById(`${bookId}-count`).textContent = count;
+                // Update with smooth animation
+                const countElement = document.getElementById(`${bookId}-count`);
+                const currentValue = parseInt(countElement.textContent);
+                
+                if (!isNaN(currentValue) && currentValue !== count) {
+                    // Use smooth counter animation only when value changes
+                    animateCounter(countElement, currentValue, count);
+                } else {
+                    // Just set the value directly on first load
+                    countElement.textContent = count;
+                }
             });
         });
+        
+        // Animate counter function for smooth visual updates
+        function animateCounter(element, start, end) {
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const duration = 500; // ms
+            const steps = Math.abs(end - start);
+            const stepTime = Math.max(duration / steps, 25);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = current;
+                
+                if (current === end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
 
-        // Increment downloads without reloading animation
+        // Increment downloads function
         window.incrementDownloads = async function(bookId) {
             const downloadsRef = ref(database, `downloads/${bookId}`);
             
@@ -61,8 +90,7 @@
                     [`downloads/${bookId}`]: newCount
                 });
                 
-                // Update the UI element directly
-                document.getElementById(`${bookId}-count`).textContent = newCount;
+                // onValue listener will automatically update the UI
             });
         }
     </script>
