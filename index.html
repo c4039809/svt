@@ -11,7 +11,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAQh4wzfFT46vza0oQdDyoNdkwcItI-bNk",
@@ -29,25 +29,34 @@
         const analytics = getAnalytics(app);
         const database = getDatabase();
 
-        window.incrementDownloads = async function(bookId) {
-            const downloadsRef = ref(database, `downloads/${bookId}`);
-            onValue(downloadsRef, (snapshot) => {
-                const currentCount = snapshot.val() || 0;
-                update(ref(database), {
-                    [`downloads/${bookId}`]: currentCount + 1
-                });
-            }, { onlyOnce: true });
-        }
-
-        // Load download counts
+        // Load download counts once at page load
         const booksIds = ['svt-arabe', 'svt-biof', 'pc-arabe', 'pc-biof'];
         booksIds.forEach(bookId => {
             const downloadsRef = ref(database, `downloads/${bookId}`);
-            onValue(downloadsRef, (snapshot) => {
+            get(downloadsRef).then((snapshot) => {
                 const count = snapshot.val() || 0;
                 document.getElementById(`${bookId}-count`).textContent = count;
             });
         });
+
+        // Increment downloads without reloading animation
+        window.incrementDownloads = async function(bookId) {
+            const downloadsRef = ref(database, `downloads/${bookId}`);
+            
+            // Get current value
+            get(downloadsRef).then((snapshot) => {
+                const currentCount = snapshot.val() || 0;
+                const newCount = currentCount + 1;
+                
+                // Update count in the database
+                update(ref(database), {
+                    [`downloads/${bookId}`]: newCount
+                });
+                
+                // Update the UI element directly
+                document.getElementById(`${bookId}-count`).textContent = newCount;
+            });
+        }
     </script>
 </head>
 <body>
@@ -56,7 +65,7 @@
             <img src="LOGO PNG_PROFILE.PNG" alt="SVT Fabour Logo" class="logo">
         </div>
         <div class="main-title">book svt fabour</div>
-        <div style="color:#888;font-size:1.1rem;margin-bottom:0.5rem ;">كتاب علوم الحياة و الأرض لجميع الشعب</div>
+        <div style="color:#888;font-size:1.1rem;margin-bottom:0.5rem ;">كتاب علوم الحياة و الأرض لجميع الشعب</div>
     </header>
 
     <main>
@@ -67,7 +76,7 @@
                 <h3>SVT Arabe</h3>
                 <div class="download-info">
                     <span class="download-count"><i class="fas fa-download"></i> <span id="svt-arabe-count">0</span></span>
-                    <a href="svt%20arabe.pdf" onclick="incrementDownloads('svt-arabe')" class="download-btn">
+                    <a href="svt arabe.pdf" download onclick="incrementDownloads('svt-arabe')" class="download-btn">
                         <i class="fas fa-file-pdf"></i> تحميل
                     </a>
                 </div>
@@ -79,7 +88,7 @@
                 <h3>SVT BIOF</h3>
                 <div class="download-info">
                     <span class="download-count"><i class="fas fa-download"></i> <span id="svt-biof-count">0</span></span>
-                    <a href="svt%20biof.pdf" onclick="incrementDownloads('svt-biof')" class="download-btn">
+                    <a href="svt biof.pdf" download onclick="incrementDownloads('svt-biof')" class="download-btn">
                         <i class="fas fa-file-pdf"></i> تحميل
                     </a>
                 </div>
@@ -91,7 +100,7 @@
                 <h3>PC Arabe</h3>
                 <div class="download-info">
                     <span class="download-count"><i class="fas fa-download"></i> <span id="pc-arabe-count">0</span></span>
-                    <a href="pc%20arabe.pdf" onclick="incrementDownloads('pc-arabe')" class="download-btn">
+                    <a href="pc arabe.pdf" download onclick="incrementDownloads('pc-arabe')" class="download-btn">
                         <i class="fas fa-file-pdf"></i> تحميل
                     </a>
                 </div>
@@ -103,7 +112,7 @@
                 <h3>PC BIOF</h3>
                 <div class="download-info">
                     <span class="download-count"><i class="fas fa-download"></i> <span id="pc-biof-count">0</span></span>
-                    <a href="pc%20biof.pdf" onclick="incrementDownloads('pc-biof')" class="download-btn">
+                    <a href="pc biof.pdf" download onclick="incrementDownloads('pc-biof')" class="download-btn">
                         <i class="fas fa-file-pdf"></i> تحميل
                     </a>
                 </div>
@@ -122,8 +131,4 @@
         </div>
     </footer>
 </body>
-<<<<<<< HEAD
-</html> 
-=======
-</html> 
->>>>>>> bec23a20fb42d726dfd1bc0f6796f21f770913e7
+</html>
