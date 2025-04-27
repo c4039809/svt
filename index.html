@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVT Fabour - علوم الحياة والأرض بكل سهولة</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQh4wzfFT46vza0oQdDyoNdkwcItI-bNk",
+            authDomain: "svt-free.firebaseapp.com",
+            databaseURL: "https://svt-free-default-rtdb.firebaseio.com",
+            projectId: "svt-free",
+            storageBucket: "svt-free.firebasestorage.app",
+            messagingSenderId: "975831976758",
+            appId: "1:975831976758:web:25fcb10a21a3465b4d8197",
+            measurementId: "G-RY6D6ZBBZN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase();
+
+        window.incrementDownloads = async function(bookId) {
+            const downloadsRef = ref(database, `downloads/${bookId}`);
+            onValue(downloadsRef, (snapshot) => {
+                const currentCount = snapshot.val() || 0;
+                update(ref(database), {
+                    [`downloads/${bookId}`]: currentCount + 1
+                });
+            }, { onlyOnce: true });
+        }
+
+        // Load download counts
+        const booksIds = ['svt-arabe', 'svt-biof', 'pc-arabe', 'pc-biof'];
+        booksIds.forEach(bookId => {
+            const downloadsRef = ref(database, `downloads/${bookId}`);
+            onValue(downloadsRef, (snapshot) => {
+                const count = snapshot.val() || 0;
+                document.getElementById(`${bookId}-count`).textContent = count;
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="LOGO PNG_PROFILE.PNG" alt="SVT Fabour Logo" class="logo">
+        </div>
+        <div class="main-title">book svt fabour</div>
+        <div style="color:#888;font-size:1.1rem;margin-bottom:0.5rem ;">كتاب علوم الحياة و الأرض لجميع الشعب</div>
+    </header>
+
+    <main>
+        <div class="books-container">
+            <!-- SVT Arabe -->
+            <div class="book-card">
+                <img src="svt ar.png" alt="SVT Arabe" class="book-cover">
+                <h3>SVT Arabe</h3>
+                <div class="download-info">
+                    <span class="download-count"><i class="fas fa-download"></i> <span id="svt-arabe-count">0</span></span>
+                    <a href="svt%20arabe.pdf" onclick="incrementDownloads('svt-arabe')" class="download-btn">
+                        <i class="fas fa-file-pdf"></i> تحميل
+                    </a>
+                </div>
+            </div>
+
+            <!-- SVT BIOF -->
+            <div class="book-card">
+                <img src="svt fr.png" alt="SVT BIOF" class="book-cover">
+                <h3>SVT BIOF</h3>
+                <div class="download-info">
+                    <span class="download-count"><i class="fas fa-download"></i> <span id="svt-biof-count">0</span></span>
+                    <a href="svt%20biof.pdf" onclick="incrementDownloads('svt-biof')" class="download-btn">
+                        <i class="fas fa-file-pdf"></i> تحميل
+                    </a>
+                </div>
+            </div>
+
+            <!-- PC Arabe -->
+            <div class="book-card">
+                <img src="pc ar.png" alt="PC Arabe" class="book-cover">
+                <h3>PC Arabe</h3>
+                <div class="download-info">
+                    <span class="download-count"><i class="fas fa-download"></i> <span id="pc-arabe-count">0</span></span>
+                    <a href="pc%20arabe.pdf" onclick="incrementDownloads('pc-arabe')" class="download-btn">
+                        <i class="fas fa-file-pdf"></i> تحميل
+                    </a>
+                </div>
+            </div>
+
+            <!-- PC BIOF -->
+            <div class="book-card">
+                <img src="pc fr.png" alt="PC BIOF" class="book-cover">
+                <h3>PC BIOF</h3>
+                <div class="download-info">
+                    <span class="download-count"><i class="fas fa-download"></i> <span id="pc-biof-count">0</span></span>
+                    <a href="pc%20biof.pdf" onclick="incrementDownloads('pc-biof')" class="download-btn">
+                        <i class="fas fa-file-pdf"></i> تحميل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <a href="https://www.oussamaidiken.site/" target="_blank">
+                <img src="https://www.oussamaidiken.site/LOGOs/aioLOGO.png" alt="AIO Logo" class="footer-logo">
+            </a>
+            <p>by</p>
+            
+            <p>جميع الحقوق محفوظة © SVT Fabour</p>
+            
+        </div>
+    </footer>
+</body>
+<<<<<<< HEAD
+</html> 
+=======
+</html> 
+>>>>>>> bec23a20fb42d726dfd1bc0f6796f21f770913e7
