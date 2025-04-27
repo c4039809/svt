@@ -24,10 +24,13 @@
     font-display: swap;
 }
 
+/* Add Noto Kufi Arabic Font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap');
+
 body {
     background: #f5f6fa;
     color: #222;
-    font-family: 'Rubik', 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Noto Kufi Arabic', 'Rubik', 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -40,7 +43,6 @@ header {
     background: linear-gradient(to bottom, #dac9f0, #ffffff00);
     padding: 3rem 0 0 0;
     text-align: center;
-
 }
 
 .logo-container {
@@ -62,9 +64,10 @@ header {
     font-size: 2.5rem;
     color: #6B46C1;
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.5px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 /* Main Content - Enhanced */
@@ -114,7 +117,7 @@ main {
     font-size: 1.3rem;
     color: #444;
     margin-bottom: 1.2rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.3px;
 }
 
